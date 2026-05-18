@@ -1,0 +1,36 @@
+name: Agent Atlas
+version: 0.1.0
+
+allowlisted_roots:
+  - ~/dev
+
+llm_wiki:
+  path: ~/dev/md
+  index_markdown: true
+
+deprecated_projects: []
+canonical_projects: []
+
+routing:
+  max_secondary_repos: 3
+  prefer_repos_with_agent_files: true
+
+safety:
+  ignored_dirs:
+    - node_modules
+    - .venv
+    - venv
+    - dist
+    - build
+    - .next
+    - .turbo
+    - .git
+    - .mypy_cache
+    - .pytest_cache
+    - .ruff_cache
+    - .pnpm-store
+  never_scan:
+    - ~/Library
+    - /Applications
+    - /System
+    - /Volumes

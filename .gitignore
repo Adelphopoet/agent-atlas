@@ -1,0 +1,19 @@
+# Local config and generated atlas data. Do not publish machine paths, remotes, or wiki indexes.
+atlas.yaml
+projects/*.yaml
+indexes/wiki/*.json
+indexes/repo-maps/*.md
+
+# Keep directory placeholders.
+!projects/.gitkeep
+!indexes/.gitkeep
+!indexes/wiki/.gitkeep
+!indexes/repo-maps/.gitkeep
+
+# Local environments and caches.
+.venv/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.DS_Store
