@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import Any
 
 from agent_atlas.config import AtlasConfig
+from agent_atlas.memory import build_memory_candidates
 from agent_atlas.safety import is_allowlisted
 from agent_atlas.wiki import find_wiki, hydrate_entry, load_wiki_index
 
@@ -37,6 +38,8 @@ def route_task(
     wiki = route_wiki(root, task, primary) if primary else []
     repo_map = repo_map_path(root, primary) if primary else ""
     command = f"cd {primary['path']} && codex" if primary else ""
+    briefing = build_briefing(primary, secondaries, wiki, repo_map, command) if primary else []
+    primary_id = primary.get("id", "") if primary else ""
     return {
         "task": task,
         "primary": primary,
@@ -45,7 +48,9 @@ def route_task(
         "repo_map": repo_map,
         "command": command,
         "next_command": command,
-        "briefing": build_briefing(primary, secondaries, wiki, repo_map, command) if primary else [],
+        "briefing": briefing,
+        "briefing_markdown": build_briefing_markdown(briefing, wiki),
+        "memory_candidates": build_memory_candidates(task, config, project_id=primary_id) if config else [],
         "safety_notes": [
             "Atlas does not start agents automatically.",
             "Route first, inspect the target repo, then present a plan before edits.",
@@ -171,3 +176,15 @@ def build_briefing(
         lines.append("Read wiki notes: " + ", ".join(entry["relative_path"] for entry in wiki[:5]))
     lines.append(f"Next command: {command}")
     return lines
+
+
+def build_briefing_markdown(briefing: list[str], wiki: list[dict[str, Any]]) -> str:
+    if not briefing:
+        return ""
+    lines = ["# Atlas Briefing", ""]
+    lines.extend(f"- {line}" for line in briefing)
+    if wiki:
+        lines.extend(["", "## Wiki Notes"])
+        for entry in wiki[:5]:
+            lines.append(f"- `{entry['relative_path']}` :: {entry.get('title', '')}")
+    return "\n".join(lines)

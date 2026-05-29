@@ -39,6 +39,30 @@ class RoutingConfig(BaseModel):
     prefer_repos_with_agent_files: bool = True
 
 
+class MemoryConfig(BaseModel):
+    auto_write: bool = True
+    max_note_chars: int = 4000
+    allowed_kinds: list[str] = Field(
+        default_factory=lambda: ["insight", "plan", "runbook", "local-guide", "decision"]
+    )
+    deny_patterns: list[str] = Field(
+        default_factory=lambda: [
+            "password",
+            "passwd",
+            "secret",
+            "token",
+            "api_key",
+            "apikey",
+            "access_key",
+            "private_key",
+            "authorization:",
+            "bearer ",
+            "BEGIN RSA PRIVATE KEY",
+            "BEGIN OPENSSH PRIVATE KEY",
+        ]
+    )
+
+
 class SafetyConfig(BaseModel):
     ignored_dirs: list[str] = Field(
         default_factory=lambda: [
@@ -105,6 +129,7 @@ class AtlasConfig(BaseModel):
     deprecated_projects: list[DeprecatedProject] = Field(default_factory=list)
     canonical_projects: list[CanonicalProject] = Field(default_factory=list)
     routing: RoutingConfig = Field(default_factory=RoutingConfig)
+    memory: MemoryConfig = Field(default_factory=MemoryConfig)
     safety: SafetyConfig = Field(default_factory=SafetyConfig)
 
 

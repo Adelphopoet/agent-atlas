@@ -6,6 +6,18 @@ It does not copy product code, call LLM APIs, run MCP servers, or start agents a
 
 ## Quickstart
 
+Install from GitHub:
+
+```bash
+uv tool install git+https://github.com/Adelphopoet/agent-atlas.git
+atlas init --wizard
+atlas doctor --fix
+atlas scan
+atlas task "добавить проверку качества в rhetorica"
+```
+
+For local development:
+
 ```bash
 uv sync
 uv run atlas init
@@ -19,9 +31,18 @@ uv run atlas route "добавить проверку качества в rhetor
 
 `atlas.yaml` is intentionally ignored by git because it contains local paths and repository metadata. Commit `atlas.example.yaml`, keep your real `atlas.yaml` private.
 
-## V1: MCP Server
+## Main CLI
 
-V1 can expose Atlas as an MCP server with read-only tools:
+- `atlas task "..."` routes a natural-language task, refreshes the wiki index, creates a repo map when needed, and prints the agent handoff command.
+- `atlas route "..." --json` is the stable agent-facing routing contract.
+- `atlas remember "..." --project <id> --kind runbook` writes durable knowledge into the configured LLM Wiki after filtering secrets and disposable noise.
+- `atlas brief <project_id>` prints a short repo briefing.
+- `atlas handoff "..."` prints a markdown prompt for another coding agent.
+- `atlas stale` shows manifests that need a fresh scan.
+
+## Later: MCP Server
+
+Atlas can later expose a read-only MCP server:
 
 - `atlas.find_projects`
 - `atlas.get_manifest`

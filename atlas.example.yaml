@@ -15,6 +15,27 @@ routing:
   max_secondary_repos: 3
   prefer_repos_with_agent_files: true
 
+memory:
+  auto_write: true
+  max_note_chars: 4000
+  allowed_kinds:
+    - insight
+    - plan
+    - runbook
+    - local-guide
+    - decision
+  deny_patterns:
+    - password
+    - passwd
+    - secret
+    - token
+    - api_key
+    - apikey
+    - access_key
+    - private_key
+    - authorization:
+    - bearer
+
 safety:
   ignored_dirs:
     - node_modules
